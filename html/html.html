@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriber Management</title>
+</head>
+<body>
+    <h2>Subscriber Management</h2>
+    <form id="addSubscriberForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <label for="height">Height:</label>
+        <input type="number" id="height" name="height" required><br><br>
+        <button type="button" onclick="addSubscriber()">Add Subscriber</button>
+    </form>
+
+    <hr>
+
+    <form id="loginForm">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required><br><br>
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required><br><br>
+        <button type="button" onclick="login()">Login</button>
+    </form>
+
+    <hr>
+
+    <h2>Get Card by ID</h2>
+    <form id="getCardByIdForm">
+        <label for="cardId">Card ID:</label>
+        <input type="number" id="cardId" name="cardId" required><br><br>
+        <button type="button" onclick="getCardById()">Get Card</button>
+    </form>
+
+    <script>
+        async function addSubscriber() {
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const height = document.getElementById("height").value;
+
+            const response = await fetch('http://localhost:5011/api/Subscriber', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                    height: parseFloat(height)
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Subscriber added successfully!");
+            } else {
+                alert("Subscriber addition failed: " + data.message);
+            }
+        }
+
+        async function getCardById() {
+            const cardId = document.getElementById("cardId").value;
+
+            const response = await fetch(`http://localhost:5011/api/Subscriber/${cardId}`, {
+                method: 'GET'
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Card details received successfully!");
+            } else {
+                alert("Failed to get card details: " + data.message);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const response = await fetch('http://localhost:5011/api/Subscriber/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Login successful!");
+            } else {
+                alert("Login failed: " + data.message);
+            }
+        }
+    </script>
+</body>
+</html>
